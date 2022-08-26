@@ -1,16 +1,16 @@
 {
   "dev": {
     "driver": "pg",
-    "host": "localhost",
-    "user": "full_stack_user",
+    "host": "dbstore.crkp9cst9gyo.us-east-1.rds.amazonaws.com",
+    "user": "fullstackuser",
     "password": "pass1234",
-    "database": "storefront_db"
+    "database": "dbstore"
   },
   "test": {
     "driver": "pg",
     "host": "localhost",
-    "user": "full_stack_user",
+    "user": "fullstackuser",
     "password": "pass1234",
-    "database": "storefront_db_test"
+    "database": "storeapp_db_test"
   }
 }

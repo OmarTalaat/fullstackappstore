@@ -1,5 +1,5 @@
 
-CREATE DATABASE storefront_db;
-CREATE DATABASE storefront_db_test;
+CREATE DATABASE dbstoreapp;
+CREATE DATABASE storeapp_db_test;
 
 
