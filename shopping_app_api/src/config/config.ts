@@ -14,7 +14,7 @@ import dotenv from 'dotenv';
 
 const SERVER = {
     hostname: 'localhost',
-    port: PORT ,
+    port: 3000 ,
     saltRounds: SALTROUNDS,
     tOKEN_SECRET:TOKEN_SECRET ,
     APP_SECRET: APP_SECRET
