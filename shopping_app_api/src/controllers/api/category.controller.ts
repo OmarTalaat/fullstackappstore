@@ -27,11 +27,22 @@ const getCategory =async (req:Request,res:Response) => {
         if (req.params.userId  != req.body.decoded.id) {
             return res.status(401).send({message: "Unauthorized!"});}
         const categories = await categoriesService.getcategories_services();
-        res.status(200).json({categories:categories});
+        res.status(200).json(categories);
      } catch (error) {
          return error
      }
    
+}
+
+const getpubiliccategories =async (req:Request,res:Response) => {
+    try {
+      
+       const categories = await categoriesService.getcategories_services();
+       res.status(200).json(categories);
+    } catch (error) {
+        return error
+    }
+  
 }
 
 
@@ -39,7 +50,8 @@ const getCategory =async (req:Request,res:Response) => {
 
 const categories_controller ={
     getCategory,
-    getcategories
+    getcategories,
+    getpubiliccategories
 }
 
 export default categories_controller

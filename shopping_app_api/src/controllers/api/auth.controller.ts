@@ -21,6 +21,7 @@ const register = async (req:Request, res:Response,next:NextFunction) => {
             password: req.body.password
         }
        
+       
         const data  = await authService.signUp(user); 
 
         res.status(201).json({user: data , message: 'user created successfully'})
@@ -43,11 +44,13 @@ const login = async (req:Request, res:Response,next:NextFunction) =>{
             username: req.body.username,
             password:req.body.password
         }
-        
         const  usertoreturn  = await authService.SignIn(user);
+        if (usertoreturn) {
+            return res.status(200).json(usertoreturn);
+        } else {
+            res.sendStatus(401).json('Somthing rong with username or passord');
+        }
 
-        return res.status(200).json(usertoreturn);
-        
     } catch (error) {
         throw new Error(`you can not login due to: ${error}`)
     }

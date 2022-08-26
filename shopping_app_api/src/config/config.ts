@@ -14,10 +14,12 @@ import dotenv from 'dotenv';
 
 const SERVER = {
     hostname: 'localhost',
-    port: 3000 ,
+    port: PORT || 3000,
     saltRounds: SALTROUNDS,
     tOKEN_SECRET:TOKEN_SECRET ,
-    APP_SECRET: APP_SECRET
+    APP_SECRET: APP_SECRET,
+    Env:ENV,
+    origin: process.env.ORIGIN || `http://localhost:${PORT}`
 }
 
 const config = { serve : SERVER}

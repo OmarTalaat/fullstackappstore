@@ -11,11 +11,12 @@ import productRepo from "../../database/repository/products.repo";
 import UserRepo from "../../database/repository/user.repo";
 import adminService from "../../services/admin-services";
 import authService from "../../services/auth-services";
-import status from "../../_helper/status ";
+import status from "../../helper/status ";
 
 
 
 describe('item Model' , () =>{
+
 
 
 
@@ -50,6 +51,8 @@ describe('item Model' , () =>{
       let categoryId:number;
       let name:string ='producttest'
       let price:number = 10
+      let url:string = 'example url'
+      let description:string ='example description'
       const quantity:number =1
       let productId:number;
       beforeAll(async()=>{
@@ -57,13 +60,13 @@ describe('item Model' , () =>{
         let user = await authService.SignIn(userforlogin);
         const order = await orderRepo.createOrder(status.Active , userId)
         const category=  await categories_repo.addcategory_FromRepo('Dairy')
-        const addproduct = await productRepo.addProductRepo(name,price,categoryId);
+        const addproduct = await productRepo.addProductRepo(name,url,price,description,categoryId);
 
         userId=user!.user.id
         orderid= order.orderid
         categoryId = category.categoryid
         productId= addproduct.productid
-        product={id:addproduct.productid ,name:addproduct.name ,price:addproduct.price}
+        product={id:addproduct.productid ,name:addproduct.name,url:addproduct.url ,price:addproduct.price,description:addproduct.description}
     })
 
     
@@ -72,22 +75,24 @@ describe('item Model' , () =>{
     
       it('create method should add a item', async () => {
         const item = await itemrepo.addProduct(quantity,orderid,productId);
-        const result:ItemDetailsDto ={id:item.itemid , quantity:item.quantity, product:product }
+        const result:ItemDetailsDto ={id:item.itemid , quantity:item.quantity, product:product ,subtotal:item.quantity * product.price }
         expect(result).toEqual({
           id: item.itemid,
           quantity: item.quantity,
-          product: product
+          product: product,
+          subtotal: item.quantity * product.price
         });
       });
 
       it('show method should return the correct item', async () => {
         setTimeout(async () => {
           const item = await itemrepo.getItem_detailes(1);
-          const result:ItemDetailsDto ={id:item.itemid , quantity:item.quantity ,product:product }
+          const result:ItemDetailsDto ={id:item.itemid , quantity:item.quantity ,product:product  ,subtotal: item.quantity * product.price}
           expect(result).toEqual({
             id: item.itemid,
           quantity: item.quantity,
-          product:product
+          product:product,
+          subtotal: item.quantity * product.price
           })
         }, 2000);
       });
@@ -111,7 +116,7 @@ describe('item Model' , () =>{
         const itemList:Awaited<ItemListDto[]> =[];
            const items= Promise.all(itemListFromrepo.map( async (item) => {
             let  itemdetails:ItemDetailsDto;
-            itemdetails ={ id: item.itemid, quantity: item.quantity, product:product }
+            itemdetails ={ id: item.itemid, quantity: item.quantity, product:product , subtotal: item.quantity * product.price }
               return itemdetails
           }))
         expect( itemList).toEqual( await items)
@@ -129,7 +134,7 @@ describe('item Model' , () =>{
         const itemList:Awaited<ItemListDto[]> =[];
            const items= Promise.all(itemListFromrepo.map( async (item) => {
             let  itemdetails:ItemDetailsDto;
-            itemdetails ={ id: item.itemid, quantity: item.quantity, product:product }
+            itemdetails ={ id: item.itemid, quantity: item.quantity, product:product , subtotal: item.quantity * product.price }
               return itemdetails
           }))
         expect( itemList).toEqual( await items)

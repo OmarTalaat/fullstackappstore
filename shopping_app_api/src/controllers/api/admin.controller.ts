@@ -85,7 +85,9 @@ const addProduct = async(req:Request, res:Response,next:NextFunction) => {
     const category_id =  parseInt(req.params.categoryId)
     const product:ProductAddDto= {
         name: req.body.name,
-        price:req.body.price
+        price:req.body.price,
+        url:req.body.url,
+        description:req.body.description
     }
   
     const data  = await adminService.addProduct(product,category_id)
@@ -102,6 +104,8 @@ const updateProduct = async(req:Request, res:Response)=>{
             id:parseInt(req.params.productId),
             name: req.body.name,
             price:req.body.price,
+            url:req.body.url,
+            description:req.body.description
         }
         const updatededProduct = await adminService.updateProduct(product);
               res.status(204).json({updatededProduct, message: 'product updated successfully '})

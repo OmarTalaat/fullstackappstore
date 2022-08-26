@@ -62,8 +62,8 @@ describe('All Endpoints For The App' ,async () =>{
                   const newuser = await authService.signUp(userforregister);
              userforlogin={username:'usertestApp' , password:'password'}
                   const user = await authService.SignIn(userforlogin)
-                          userId =user.user.id
-                          token= user.token
+                          userId =user!.user.id
+                          token= user!.token
                   const existingUser = await authService.isusernameexist(userforlogin.username);
                         existingUsername = existingUser!.username
           // categories methods
@@ -73,7 +73,7 @@ describe('All Endpoints For The App' ,async () =>{
 
             // product methods
 
-                        productToadd={name:'product1' , price:10}
+                        productToadd={name:'product1' ,url:'url example', price:10,description:'description test'}
             let newproduct = await adminService.addProduct(productToadd,categoryId)
                         productId = newproduct.id
             //oreder methods
@@ -91,17 +91,17 @@ describe('All Endpoints For The App' ,async () =>{
 
             userforregister_fortestadmin={username:'usertest_forAdmin',password:'password'}
             const newuser_foradmin= await authService.signUp(userforregister_fortestadmin);
-                    Adminforlogin={username:'Admin' , password:'password'}
+                    Adminforlogin={username:'Admin' , password:'$2b$10$DaV1APn3ehdp/zbAXpqCWO6KMgUlh.kM2ayRhBxVXjGSncUAuz9zW'}
             const admin = await authService.SignIn(Adminforlogin)
-                    AdminToken= admin.token
+                    AdminToken= admin!.token
                     userfor_Adminlogin={username:'usertest_forAdmin',password:'password'}
             const userforAdmintest = await authService.SignIn(userfor_Adminlogin)
-                    userId_foradmintest = userforAdmintest.user.id
+                    userId_foradmintest = userforAdmintest!.user.id
                     newcategoryfortestDto={name:'categoery test2'}
             const categoerytest = await adminService.addCategory(newcategoryfortestDto.name)
                   categoryfortestId=categoerytest.id
 
-                  productToaddtest={name:'producttestadmin1' , price:10}
+                  productToaddtest={name:'producttestadmin1' ,url:'url example', price:10 ,description:'descrption example'}
              const newproducttest = await adminService.addProduct(productToaddtest,categoryId)
                         producttestId = newproducttest.id
 
@@ -307,7 +307,16 @@ describe('All Endpoints For The App' ,async () =>{
                 
                         it('edit order status',  ()=>{
                             let orderedit:OrderEditDto;
-                            orderedit={id:orderId ,status:'Complete'}
+                            orderedit={id:orderId ,
+                                        status:'Complete',
+                                        adress: 'example test of adress',
+                                        countryName: 'country test',
+                                        zip: '12365',
+                                        nameoncard: 'name card test' ,
+                                        creditcardNumber: '123654786',
+                                        cvv: 'cvv test',
+                                        exirationDate:'test date',
+                                        total:20}
                           setTimeout(() => {
                             request
                             .put(`/api/users/${userId}/orders/${orderId}`)
@@ -489,7 +498,7 @@ describe('All Endpoints For The App' ,async () =>{
 
                       it('Add product to category',async ()=>{
                         let product:ProductAddDto
-                        product={name:'producttest2' , price:10}
+                        product={name:'producttest2' ,url:'url example', price:10 , description:'descrption example'}
                         request
                         .post(`/api/admin/categories/${categoryId}/products`)
                         .set("Authorization", `Bearer ${AdminToken}`)

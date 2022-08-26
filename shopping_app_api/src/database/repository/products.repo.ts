@@ -7,13 +7,13 @@ import { ProductEditDto } from "../dtos/productDtos/productEditDto";
 
 
 
-const  addProductRepo= async (name:string,price:number,category_id:number ):Promise<Product>=> {
+const  addProductRepo= async (name:string,url:string, price:number, description:string ,category_id:number ):Promise<Product>=> {
     try {
      
   const conn = await Client.connect();
-  const sql = `INSERT INTO products (name,price,category_id) VALUES($1,$2,$3) RETURNING *`
+  const sql = `INSERT INTO products (name,url,price,description,category_id) VALUES($1,$2,$3,$4,$5) RETURNING *`
   const result = await conn
-      .query(sql,[name,price,category_id]);
+      .query(sql,[name,url,price,description,category_id]);
       const product = result.rows[0]
   conn.release();
   return product
@@ -28,7 +28,7 @@ const  addProductRepo= async (name:string,price:number,category_id:number ):Prom
 const getAllproductsbycategory_repo = async(category_id:number):Promise<Product[]> => {
     try {
         const conn = await Client.connect()
-        const sql = `SELECT products.productid ,products.name , products.price FROM products  WHERE products.category_id=(${category_id})`
+        const sql = `SELECT products.productid ,products.name ,products.url , products.price , products.description FROM products  WHERE products.category_id=(${category_id})`
         const result = await conn.query(sql)
         const products = result.rows
         
@@ -42,7 +42,7 @@ const getAllproductsbycategory_repo = async(category_id:number):Promise<Product[
 const getproductByid = async(productId:number):Promise<Product> => {
     try {
         const conn = await Client.connect();
-        const sql = `SELECT products.productid  ,products.name , products.price FROM products where productid=($1)`
+        const sql = `SELECT products.productid ,products.name ,products.url, products.price , products.description FROM products where productid=($1)`
         const result = await conn.query(sql,[productId])
         const product = result.rows[0]
         conn.release()
@@ -56,7 +56,8 @@ const getproductByid = async(productId:number):Promise<Product> => {
 const editProduct = async(pro:ProductEditDto ):Promise<Product> => {
     try {
         const conn = await Client.connect()
-        const sql = `UPDATE products SET name='${pro.name}' , price=${pro.price} WHERE productid=${pro.id}`
+        const sql = `UPDATE products SET name='${pro.name}',
+                    url=${pro.url} , price=${pro.price} , description=${pro.description}WHERE productid=${pro.id}`
         const result = await conn.query(sql)
         const product = result.rows[0]
         

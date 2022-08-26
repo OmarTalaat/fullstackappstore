@@ -89,7 +89,7 @@ const deleteCategory = async(id:number) => {
 const addProduct = async(productToCreat:ProductAddDto,category_id:number) => {
     try {
         
-        const productfromrepo = await productRepo.addProductRepo(productToCreat.name,productToCreat.price,category_id);
+        const productfromrepo = await productRepo.addProductRepo(productToCreat.name,productToCreat.url,productToCreat.price ,productToCreat.description,category_id);
         var product:ProductDetailsDto
          product={id:productfromrepo.productid ,name:productfromrepo.name , price: productfromrepo.price};
          return product
@@ -104,7 +104,7 @@ const updateProduct = async(product:ProductEditDto) => {
 
         var productToreturn:ProductDetailsDto;
 
-        return productToreturn={id:updatedProduct.productid,name:updatedProduct.name,price:updatedProduct.price}
+        return productToreturn={id:updatedProduct.productid,name:updatedProduct.name,price:updatedProduct.price , url:updatedProduct.url , description:updatedProduct.description}
 
     } catch (err) {
         throw new Error(`can not update product ${product.name}`);

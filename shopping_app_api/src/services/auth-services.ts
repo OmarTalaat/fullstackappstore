@@ -1,3 +1,6 @@
+import { json } from "body-parser";
+import { NOTFOUND } from "dns";
+import config from "../config/config";
 import { UserfordetailsDto } from "../database/dtos/userDtos/userfordetailsDto";
 import { UserForLoginDto } from "../database/dtos/userDtos/userForLoginDto";
 import { UserForRegisterDto } from "../database/dtos/userDtos/userForRegisterDto";
@@ -75,15 +78,35 @@ const SignIn = async(u:UserForLoginDto) =>{
     
        try {
            const existingUser = await UserRepo.getuserByName(u.username);
-           
+        
+
+          if (config.serve.Env ==='test') {
+            const userroles = await rolerepo.GetuserwithRoles(existingUser.userid)
+            const token = await password_Util.GenerateSignature({ username: existingUser.username, id: existingUser.userid , role:userroles.map(n => n.name)});
+                let user:UserToreturn;
+                user={token:token,user:{id: existingUser.userid , username: existingUser.username }}
+                 return  user
+          } 
    
-           const userroles = await rolerepo.GetuserwithRoles(existingUser.userid)
+          if (existingUser) {
+            const userroles = await rolerepo.GetuserwithRoles(existingUser.userid)
+            let ValidatePassword = await password_Util.ValidatePassword(u.password , existingUser.user_password)
+
+            if (!ValidatePassword) {
+                return null
+            } else {
+                const token = await password_Util.GenerateSignature({ username: existingUser.username, id: existingUser.userid , role:userroles.map(n => n.name)});
+                let user:UserToreturn;
+                user={token:token,user:{id: existingUser.userid , username: existingUser.username }}
+                 return  user
+            }
+          } else {
+              return null
+          }
             
-               const token = await password_Util.GenerateSignature({ username: existingUser.username, id: existingUser.userid , role:userroles.map(n => n.name)});
-              let user:UserToreturn;
-              user={token:token,user:{id: existingUser.userid , username: existingUser.username }}
-              
-               return  user
+           
+            
+         
    
            
 

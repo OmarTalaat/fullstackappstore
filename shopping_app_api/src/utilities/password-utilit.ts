@@ -34,10 +34,14 @@ const   GenerateSalt = async() => {
 };
 
 
- const ValidatePassword = async (enteredPassword: string | Buffer, savedPassword: string, salt: string | number) => {
-    return await GeneratePassword(enteredPassword, salt) === savedPassword;
+ const ValidatePassword = async (enteredPassword: string | Buffer, savedPassword: string) => {
+   // return await GeneratePassword(enteredPassword, salt) == savedPassword;
+   return bcrypt.compare(enteredPassword, savedPassword);
 };
 
+ const  comparepasswod = async(password:string ,savedPassword: string)=>{
+    const validPassword = await bcrypt.compare(password, savedPassword);
+  }
 
  const  GenerateSignature = async (payload:JwtPayload) => {
     return jwt.sign( payload, token_secret , { expiresIn: 86400 } )
@@ -83,6 +87,7 @@ const password_Util = {
     GenerateSignature,
     ValidateSignature,
     FormateData,
+    comparepasswod
     
 
 }

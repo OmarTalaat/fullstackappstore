@@ -12,15 +12,17 @@ POSTGRES_USER,
 POSTGRES_PASSWORD,
 POSTGRES_DATABASE,
 POSTGRES_DATABASE_TEST,
-Env ,
+NODE_ENV ,
+RDS_CONNECTION_URL
 }= process.env;
 
 
+const connectionString = `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_host}:5432/${POSTGRES_DATABASE}`
 
 
 let client = new Pool();
 
-     if(Env  === 'test') {
+    /*  if(Env  === 'test') {
        
         client = new Pool({
           host: POSTGRES_host,
@@ -28,17 +30,28 @@ let client = new Pool();
           user: POSTGRES_USER,
           password: POSTGRES_PASSWORD,
         })
-      }
-      if(Env  ==='dev') {
+      } */
+      if(NODE_ENV  ==='dev') {
         client = new Pool({
           host: POSTGRES_host,
           database: POSTGRES_DATABASE,
           user: POSTGRES_USER,
-          password: POSTGRES_PASSWORD,
+          password: POSTGRES_PASSWORD
         })
       }
-   
+  /*     if(Env  ==='dev') {
+        client = new Pool({
+          host: POSTGRES_host,
+          database: POSTGRES_DATABASE,
+          user: POSTGRES_USER,
+          password: POSTGRES_PASSWORD
+        })
+      } */
 
+
+
+   
+client.connect();
 
 
 

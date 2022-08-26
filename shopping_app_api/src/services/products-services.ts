@@ -9,7 +9,7 @@ const getproductsbycategory = async(categoryId:number) => {
         
         let products= Promise.all(productsToReturn.map(pro => {
             let product:ProductDetailsDto
-            product={id:pro.productid , name:pro.name,price:pro.price}
+            product={id:pro.productid , name:pro.name,price:pro.price, url:pro.url}
             return product
         }))
         return products
@@ -25,7 +25,7 @@ const getproductbyId = async(productId:number) => {
 
         let product:ProductDetailsDto;
 
-        return product={id:productToreturn.productid, name: productToreturn.name , price: productToreturn.price};
+        return product={id:productToreturn.productid, name: productToreturn.name , price: productToreturn.price , url:productToreturn.url,description:productToreturn.description};
     } catch (err) {
         throw new Error(`can not get this product error${err}`)
     }

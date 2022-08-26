@@ -113,7 +113,8 @@ const update_quantity_Item = async(itemId:number , quantity:number):Promise<Item
 
     const connection = await client.connect();
     const sql =
-        `UPDATE items SET quantity=${quantity} WHERE itemid=${itemId} RETURNING *`;
+        `UPDATE items SET quantity=${quantity} WHERE itemid=${itemId} RETURNING itemid ,
+         quantity , product_id as productid ,order_id as orderid`;
         const result = await connection.query(sql);
         const item = result.rows[0];
         connection.release();

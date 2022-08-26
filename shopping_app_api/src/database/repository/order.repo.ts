@@ -40,13 +40,13 @@ const getItems_in_order = async(userId:number, status:string) =>{
           }
 }
 
- const getOrdersByStatus = async(status:string , userId:number):Promise<Order[]>=>{
+ const getOrdersByStatus = async(status:string , userId:number):Promise<Order>=>{
 try {
     const conn = await Client.connect();
         const sql = `SELECT * FROM orders WHERE user_id =${userId} AND status='${status}';`
         const result = await conn
             .query(sql);
-            const order = result.rows
+            const order = result.rows[0]
         conn.release();
         return order
 
@@ -73,10 +73,20 @@ const getOrderById = async(orderId:number):Promise<Order>=>{
 
 
 
-const Edit_Order_status = async(ordertocreate:OrderEditDto)=>{
+const Edit_Order_status = async(ordertoupdate:OrderEditDto) :Promise<Order>=>{
     try {
         const conn = await Client.connect();
-        const sql = `UPDATE orders  SET status='${ordertocreate.status}' WHERE orderid=${ordertocreate.id} RETURNING *;`
+        const sql = `UPDATE orders  SET
+                     status='${ordertoupdate.status}',
+                     adress='${ordertoupdate.adress}' ,
+                     countryName='${ordertoupdate.countryName}',
+                     zip='${ordertoupdate.zip}',
+                     nameoncard='${ordertoupdate.nameoncard}',
+                     creditcardNumber='${ordertoupdate.creditcardNumber}',
+                     cvv='${ordertoupdate.cvv}',
+                     exirationDate='${ordertoupdate.exirationDate}',
+                     total='${ordertoupdate.total}'
+                     WHERE orderid=${ordertoupdate.id} RETURNING *;`
         const result = await conn.query(sql);
             const order = result.rows[0]
         conn.release();
@@ -86,7 +96,18 @@ const Edit_Order_status = async(ordertocreate:OrderEditDto)=>{
           }
 }
 
-
+const Edit_Order_adress = async(ordertocreate:OrderEditDto):Promise<Order>=>{
+    try {
+        const conn = await Client.connect();
+        const sql = `UPDATE orders  SET adress='${ordertocreate.adress}' WHERE orderid=${ordertocreate.id} RETURNING *;`
+        const result = await conn.query(sql);
+            const order = result.rows[0]
+        conn.release();
+        return order
+          } catch (err) {
+              throw new Error(`from repo Could not add new orders. Error: ${err}`)
+          }
+}
 
 
 const deleteorder =async(orderId:number)=>{
@@ -117,7 +138,8 @@ const orderRepo ={
     getOrdersByStatus,
     getOrderById,
     getItems_in_order,
-    deleteorder
+    deleteorder,
+    Edit_Order_adress
 }
 
 

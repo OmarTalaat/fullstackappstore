@@ -2,7 +2,7 @@ import { OrderDetailsDto } from "../../database/dtos/orderDtos/orderDetailsDto";
 import orderRepo from "../../database/repository/order.repo";
 import UserRepo from "../../database/repository/user.repo";
 import adminService from "../../services/admin-services";
-import status from "../../_helper/status ";
+import status from "../../helper/status ";
 
 
 describe('order Model' , ()=> {
@@ -63,7 +63,19 @@ describe('order Model' , ()=> {
         setTimeout(async () => {
             
         const addorder = await orderRepo.createOrder(status.Active ,userId);
-          const updateorder = await orderRepo.Edit_Order_status({id:addorder.orderid ,status:status.Complete});
+          const updateorder = await orderRepo.Edit_Order_status({
+            id:addorder.orderid ,
+            status:status.Complete,
+            adress: 'example test of adress',
+            countryName: 'country test',
+            zip: '12365',
+            nameoncard: 'name card test' ,
+            creditcardNumber: '123654786',
+            cvv: 'cvv test',
+            exirationDate:'test date',
+            total:20
+            
+          });
           const result:OrderDetailsDto ={id:updateorder.orderid , status:updateorder.status }
           expect(result).toEqual({
             id: updateorder.orderid,
@@ -72,23 +84,7 @@ describe('order Model' , ()=> {
         }, 2000);
       });
 
-      it("index method should return a list of order", async () => {
-     
-        setTimeout(async () => {
-           
-          const orderListFromrepo = await orderRepo.getOrdersByStatus(status.Active, userId);
     
-        const orderlist:OrderDetailsDto[] =[];
-           const orders= orderListFromrepo.map(order => {
-              let  orderDetails:OrderDetailsDto;
-              orderDetails ={ id: order.orderid, status: order.status }
-                return orderDetails
-            })
-            
-
-        expect(orderlist).toEqual(orders)
-        }, 3000);
-      });
 
       it('delete method should remove the order', async () => {
      
@@ -97,15 +93,15 @@ describe('order Model' , ()=> {
          
           const orderListFromrepo = await orderRepo.getOrdersByStatus(status.Active, userId);
     
-        const orderlist:OrderDetailsDto[] =[];
-           const orders= orderListFromrepo.map(order => {
+        
+           
               let  orderDetails:OrderDetailsDto;
-              orderDetails ={ id: order.orderid, status: order.status }
-                return orderDetails
-            })
+              orderDetails ={ id: orderListFromrepo.orderid, status: orderListFromrepo.status }
+                
+           
             
 
-        expect(orderlist).toEqual(orders)
+        expect(orderDetails).toEqual({id: orderListFromrepo.orderid, status: orderListFromrepo.status })
         }, 6000);
        
       });

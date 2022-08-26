@@ -20,7 +20,7 @@ const getCategoryById = async(id: number) =>{
         
        let products=  Promise.all(productsToreturn.map(pro =>{
         let productdetails:ProductDetailsDto
-          productdetails={ id:pro.productid , name:pro.name , price:pro.price}
+          productdetails={ id:pro.productid , name:pro.name , price:pro.price , url:pro.url}
         return productdetails
     } ))
         var categoery: CategoryDetailsDto
@@ -41,7 +41,7 @@ const getcategories_services = async()=>{
         
                 let products=  Promise.all(productsToreturn.map(pro =>{
                     let productdetails:ProductDetailsDto
-                    productdetails={ id:pro.productid , name:pro.name , price:pro.price}
+                    productdetails={ id:pro.productid , name:pro.name , price:pro.price , url:pro.url}
                     return productdetails
                     } ))
 

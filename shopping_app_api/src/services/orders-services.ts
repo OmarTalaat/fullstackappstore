@@ -17,7 +17,7 @@ const createOrderService = async(status:string ,user_id:number) => {
     try {
         const  orderTocreate = await orderRepo.createOrder(status,user_id);
             var order:OrderDetailsDto;
-            return  order={id:orderTocreate.orderid ,status:orderTocreate.status};
+            return  order={id:orderTocreate.orderid ,status:orderTocreate.status };
     } catch (error) {
         throw new Error(`you cant create this order ${error}` )
     }
@@ -30,11 +30,23 @@ const get_order_bystatus = async( status:string , userId:number ) =>{
     try {
         const orderfromrepo = await orderRepo.getOrdersByStatus(status,userId);
 
-        var orderByStatus:OrderDetailsDto[]=[];
-         orderfromrepo.forEach( order => {
-             orderByStatus.push({id:order.orderid , status:order.status  })
-         })
-        return orderByStatus
+       if (orderfromrepo ) {
+        const itemcount = await itemrepo.getitemsCountbyorder(orderfromrepo.orderid);
+        var order:OrderDetailsDto;
+       var items= await itemService.getItemListInOrder(orderfromrepo.orderid);
+       
+       const sum = items!.filter(item => item.subtotal)
+       .reduce((sum, current) => (sum + current.subtotal), 0).toFixed(2);
+         order={id:orderfromrepo.orderid,status:orderfromrepo.status ,
+            itemcount:itemcount, items:items ,total: parseFloat(sum) , adress:orderfromrepo.adress};
+        
+        return order
+       } else {
+           return null
+       }
+          
+
+        
     } catch (err) {
         throw new Error(`you can not edit status ${err}`)
     }
@@ -45,7 +57,38 @@ const edit_order_status =async(orderToEdit:OrderEditDto)=>{
         const orderToreturn = await orderRepo.Edit_Order_status(orderToEdit);
 
         var order:OrderToretuenDto;
-        return order={id:orderToreturn.id , status:orderToreturn.status}
+        return order={id:orderToreturn.orderid , 
+                      status:orderToreturn.status, 
+                      adress: orderToreturn.adress,
+                      countryName: orderToreturn.countryName,
+                      zip: orderToreturn.zip,
+                      nameoncard: orderToreturn.nameoncard,
+                     creditcardNumber: orderToreturn.creditcardNumber,
+                     cvv:orderToreturn.cvv,
+                     exirationDate: orderToreturn.exirationDate,
+                     total: orderToreturn.total}
+    } catch (err) {
+        throw new Error(`you can not edit your order due to ${err}`)
+    }
+}
+
+const edit_order_Adress =async(orderToEdit:OrderEditDto)=>{
+    try {
+        const orderToreturn = await orderRepo.Edit_Order_adress(orderToEdit);
+
+        var order:OrderToretuenDto;
+        return order={
+                      id:orderToreturn.orderid , 
+                      status:orderToreturn.status, 
+                      adress: orderToreturn.adress,
+                      countryName: orderToreturn.countryName,
+                      zip: orderToreturn.zip,
+                      nameoncard: orderToreturn.nameoncard,
+                     creditcardNumber:orderToreturn.creditcardNumber,
+                     cvv:orderToreturn.cvv,
+                     exirationDate: orderToreturn.exirationDate,
+                     total: orderToreturn.total
+        }
     } catch (err) {
         throw new Error(`you can not edit your order due to ${err}`)
     }
@@ -60,7 +103,10 @@ const get_order_byId =async(orderId:number) => {
             const itemcount = await itemrepo.getitemsCountbyorder(orderId);
         var order:OrderDetailsDto;
        var items= await itemService.getItemListInOrder(orderId);
-         order={id:orderToreturn.orderid,status:orderToreturn.status ,itemcount:itemcount, items:items};
+       const sum = items!.filter(item => item.subtotal)
+       .reduce((sum, current) => (sum + current.subtotal), 0).toFixed(2);
+         order={id:orderToreturn.orderid,status:orderToreturn.status ,itemcount:itemcount, items:items ,
+             total:parseFloat(sum) , adress:orderToreturn.adress};
          
          return order;
       
@@ -88,7 +134,8 @@ const orderservice = {
     get_order_bystatus,
     edit_order_status,
     get_order_byId,
-    deleteOrder
+    deleteOrder,
+    edit_order_Adress
 }
 
 
