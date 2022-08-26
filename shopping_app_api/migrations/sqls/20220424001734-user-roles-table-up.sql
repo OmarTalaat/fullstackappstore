@@ -8,4 +8,8 @@ CREATE TABLE user_roles (
 
 INSERT INTO user_roles
 ( user_id, role_id)
-VALUES( 1, 1),( 1, 3);
+VALUES
+( 1, 1),
+( 1, 3),
+( 2 , 2),
+(2,3);

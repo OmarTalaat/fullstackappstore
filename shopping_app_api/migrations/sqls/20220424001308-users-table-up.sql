@@ -9,5 +9,6 @@ CREATE TABLE users (
 INSERT INTO users
 ( username, user_password)
 VALUES
-( 'Admin', 'password')
+( 'Admin', '$2b$10$DaV1APn3ehdp/zbAXpqCWO6KMgUlh.kM2ayRhBxVXjGSncUAuz9zW'),
+('Moderator', '$2b$10$DaV1APn3ehdp/zbAXpqCWO6KMgUlh.kM2ayRhBxVXjGSncUAuz9zW')
 

@@ -3,3 +3,9 @@ CREATE TABLE categories (
     name VARCHAR(50)
     
 );
+
+
+INSERT INTO categories
+(name)
+VALUES ('Books'),('Accessories'),('Clothes'),('Bags');
+
